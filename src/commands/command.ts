@@ -67,9 +67,7 @@ export abstract class Command {
                 let keyword: string = args.shift()?.toLowerCase().slice(config.botConfig.prefix.length) || 'default';
 
                 // Prepare Message for Subcommands
-                let subPos = keyword.lastIndexOf('>');
-                let currentKeyword = keyword.substring(subPos === -1 ? 0 : subPos);
-                if (criteria !== currentKeyword) {
+                if (criteria !== keyword) {
                     args.unshift(config.botConfig.prefix + keyword);
                     continue;
                 }
