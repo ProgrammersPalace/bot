@@ -25,9 +25,9 @@ export class MessageHandler implements IEventHandler<MessageHandler['EVENT_NAME'
             command.execute(message, trigger, args);
     }
 
-    private getTriggeredCommand(message: Message): [Command, ConcreteTrigger] | undefined{
+    private getTriggeredCommand(message: Message, args: string[]): [Command, ConcreteTrigger] | undefined{
         for (const cmd of commands) {
-            const trigger = cmd.checkTriggers(message);
+            const trigger = cmd.checkTriggers(message, args);
             if (trigger)
                 return [trigger.command, trigger];
         }
