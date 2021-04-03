@@ -14,3 +14,4 @@ node_modules/
 **/*.synctex.gz
 **/*.fls
 **/*.fdb_latexmk
+**/*.toc
