@@ -1,6 +1,8 @@
 \documentclass[12pt,oneside]{book}
 
-\title{Bot Specification Sheet}
+\include{lib/listingssetup.tex}
+
+\title{{\Large Bot Specification Sheet}\\{\small A guide to `pp-cli'}}
 \author{dkantereivin, Doomer}
 \date{\today}
 
@@ -18,15 +20,59 @@
 \chapter[Core]{Core Structure}
     `pp-cli' consists out of 3 components, which are crucial for it to work!
     Events Handlers, Commands and Services are the three backbones of this 
-    project. Event Handlers take Events from the Discord API and work with 
-    them - for example, fetch them to detect and eventually trigger commands
-    or use them to classify data for a future machine learning subproject!
+    project.\\
+    Event Handlers take Events from the Discord API and work with them - for 
+    example, fetch them to detect and eventually trigger commands or use them 
+    to classify data for a future machine learning subproject!\\
     Commands are the part of the project that is triggered by certain events
     and usually processes and outputs a user message or accesses and possibly
-    alters the database (soon to be implemented)!
+    alters the database (soon to be implemented)!\\
+    Services - the final piece of that triplet is responsible for providing 
+    universal, reusable code snippets and are categorized into specific 
+    areas of application, some of them are needed for the bot to start up, 
+    while others take care of the functions during the bots runtime!
 
 \chapter[Events]{Event Handling}
+    Let's start with the first concept - the Event Handlers. The Event Handlers
+    are quite simply organized structure-wise. The interface used as a blueprint
+    for the event handlers contains a single field - \code{EVENT_NAME} and a 
+    single \code{onEvent} function, which automatically adapts to the arguments
+    required for the specified Event Name such as seen in Listing 
+    \ref{lst:event-interface}!\\
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[language=TypeScript, caption=Event Handler Interface, 
+        label=lst:event-interface]
+interface IEventHandler<EventName extends keyof ClientEvents> 
+{
+    readonly EVENT_NAME: EventName;
+    onEvent(...args: ClientEvents[EventName]): void;
+}
+        \end{lstlisting}
+    \end{minipage}
+    At the moment we implemented 3 such event handlers. Ready Handler, for which
+    the event gets fired at the bot start up. Message Handler, for which the 
+    event fires when the bot receives a message and a Message Reaction Add Handler,
+    which handles incoming reactions for cached messages! All those play an important
+    part for the application as a whole, and enable certain feature sets.\\
+    The Ready Handler prepares the Bot for action - this will be used in the near 
+    future to initialize the caches. The current implementation is as easy as the
+    following:\\
+    \begin{minipage}{\linewidth}
+        \begin{lstlisting}[language=TypeScript, caption=Ready Handler, label=lst:ready-handler]
+public readonly EVENT_NAME = 'ready';
+public onEvent() {
+    Logger.info('Connected.');
+}
+        \end{lstlisting} 
+    \end{minipage}
+    The Message Handler is responsible for 
+    testing whether a command triggers given the message supplied by the event.
+    The Reaction Handler tests for certain tags and if those apply it flags the message
+    and adds it to the database (to be implemented)!
 
-\chapter[Commands]{Commands}
+
+\chapter[Commands]{Commands \& Triggers}
+
+\chapter[Services]{Services}
 
 \end{document}
